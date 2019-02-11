@@ -1,3 +1,6 @@
 #Project
 workspace.xml
 tasks.xml
+
+# Virtual Env
+venv/
