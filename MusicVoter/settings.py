@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'channels',
 
     'allauth',
     'allauth.account',
@@ -223,3 +224,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+# Channels
+ASGI_APPLICATION = "MusicVoter.routing.application"
