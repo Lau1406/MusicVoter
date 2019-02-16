@@ -50,5 +50,13 @@ class Vote(models.Model):
     upvote = models.CharField(max_length=2, choices=VOTES, default=NEUTRAL)
     song = models.ForeignKey(Song, on_delete=models.CASCADE)
 
+    def save(self, *args, **kwargs):
+        # Get the old vote
+        old = int(Vote.objects.get(pk=getattr(self, 'pk', None)).upvote)
+        # Update associated song.votes
+        self.song.votes += int(self.upvote) - old
+        self.song.save()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.song.name + " - " + self.user.username
