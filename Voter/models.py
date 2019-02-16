@@ -47,7 +47,7 @@ class Vote(models.Model):
         unique_together = ('user', 'song')
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    upvote = models.CharField(max_length=1, choices=VOTES, default=NEUTRAL)
+    upvote = models.CharField(max_length=2, choices=VOTES, default=NEUTRAL)
     song = models.ForeignKey(Song, on_delete=models.CASCADE)
 
     def __str__(self):
