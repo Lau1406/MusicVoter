@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.utils.translation import ugettext
 
 
@@ -17,6 +18,11 @@ class Song(models.Model):
     artists = models.ManyToManyField(Artist, blank=True)
     length_ms = models.PositiveIntegerField()
     uri = models.CharField(max_length=200, primary_key=True)
+    votes = models.IntegerField(default=0)
+
+    def has_votes(self):
+        # Get all votes that are not NEUTRAL and check if the amount is not equal to 0
+        return Vote.objects.filter(Q(song=self.pk) & ~Q(upvote=Vote.NEUTRAL)).count() != 0
 
     def __str__(self):
         return self.name
