@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.template import loader
-from rest_framework.decorators import api_view
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from spotipy.oauth2 import SpotifyClientCredentials
 from Voter.serializers import *
@@ -14,6 +16,8 @@ def index(request):
 
 
 @api_view(['POST'])
+@authentication_classes((SessionAuthentication, BasicAuthentication))
+@permission_classes((IsAuthenticated,))
 def spotify_search(request):
     # TODO: make robust
 
