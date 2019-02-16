@@ -1,7 +1,9 @@
 from django.http import HttpResponse
 from django.template import loader
+from django.contrib.auth.models import User
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -51,3 +53,34 @@ def spotify_search(request):
 
     serializer = SongSerializer(songs, context={'request': request}, many=True)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+@authentication_classes((SessionAuthentication, BasicAuthentication))
+@permission_classes((IsAuthenticated,))
+def vote(request):
+    # Get the song
+    song_uri = request.data['uri']
+    song = Song.objects.get(
+        uri=song_uri
+    )
+
+    # Get or create the vote
+    vote, created = Vote.objects.get_or_create(
+        user=request.user,
+        song=song
+    )
+
+    # Update the vote
+    voted = request.data['vote']
+    if voted == Vote.NEUTRAL:
+        vote.upvote = Vote.NEUTRAL
+    elif voted == Vote.UPVOTE:
+        vote.upvote = Vote.UPVOTE
+    elif voted == Vote.DOWNVOTE:
+        vote.upvote = Vote.DOWNVOTE
+    # Save the updated vote
+    vote.save()
+
+    # TODO: Update all sockets
+    return Response()
