@@ -1,0 +1,36 @@
+{#{% load account %}#}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if user.is_authenticated %}Logged In{% else %}Not Logged In{% endif %}</title>
+</head>
+<body>
+<h4>Lorem Ipsum</h4>
+<div>
+{% if user.is_authenticated %}
+    <a href="/accounts/logout/" class="pull-right">Logout</a>
+    {% if user.first_name or user.last_name %}
+        {{ user.first_name }} {{ user.last_name }}
+    {% else %}
+        {{ user.username }}
+    {% endif %}
+    {% if user.profile.account_verified %} (verified) {% else %} (unverified) {% endif %}
+
+{% else %}
+    <a href="/accounts/login/" class="pull-right">Login</a>
+{% endif %}
+
+</div>
+<div>
+ {% if user.is_authenticated %}
+            Welcome back {{ user.email }}
+        {% else %}
+            You are not logged in
+        {% endif %}
+
+</div>
+
+</body>
+</html>
