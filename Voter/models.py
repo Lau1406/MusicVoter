@@ -24,6 +24,13 @@ class Song(models.Model):
         # Get all votes that are not NEUTRAL and check if the amount is not equal to 0
         return Vote.objects.filter(Q(song=self.pk) & ~Q(upvote=Vote.NEUTRAL)).count() != 0
 
+    def reset_votes(self):
+        # Set all votes to NEUTRAL
+        Vote.objects.filter(song=self.pk).update(upvote=Vote.NEUTRAL)
+        # Update own votes total just in case
+        self.votes = 0
+        self.save()
+
     def __str__(self):
         return self.name
 
