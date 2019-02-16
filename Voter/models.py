@@ -1,5 +1,5 @@
 from django.db import models
-from allauth.app_settings import USER_MODEL
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext
 
 
@@ -37,9 +37,12 @@ class Vote(models.Model):
         (DOWNVOTE, ugettext('Downvote')),
     )
 
-    user = models.ForeignKey(USER_MODEL, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ('user', 'song')
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     upvote = models.CharField(max_length=1, choices=VOTES, default=NEUTRAL)
     song = models.ForeignKey(Song, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.attname
+        return self.song.name + " - " + self.user.username
