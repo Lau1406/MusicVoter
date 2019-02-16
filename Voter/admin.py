@@ -6,14 +6,14 @@ from Voter.models import *
 
 @admin.register(Vote)
 class VoteAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('user', 'song',)
 
 
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('name', 'image', 'length_ms', 'uri', 'votes',)
 
 
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('name', 'uri',)
