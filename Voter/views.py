@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from spotipy.oauth2 import SpotifyClientCredentials
+
+from Voter.data_helpers import get_update_data
 from Voter.serializers import *
 from channels.layers import get_channel_layer
 import spotipy
@@ -83,11 +85,10 @@ def vote(request):
     vote.save()
 
     # Update all sockets
-    # TODO: Actually send back all data
     layer = get_channel_layer()
     async_to_sync(layer.group_send)('update', {
         'type': 'update.full',
-        'content': 'something'
+        'content': get_update_data(request.user.pk)
     })
 
     return Response()
