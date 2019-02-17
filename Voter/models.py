@@ -20,6 +20,9 @@ class Song(models.Model):
     uri = models.CharField(max_length=200, primary_key=True)
     votes = models.IntegerField(default=0)
 
+    class Meta:
+        ordering = ['votes']
+
     def has_votes(self):
         # Get all votes that are not NEUTRAL and check if the amount is not equal to 0
         return Vote.objects.filter(Q(song=self.pk) & ~Q(upvote=Vote.NEUTRAL)).count() != 0
