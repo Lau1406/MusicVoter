@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.models import User
@@ -8,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from spotipy.oauth2 import SpotifyClientCredentials
 from Voter.serializers import *
+from channels.layers import get_channel_layer
 import spotipy
 
 
@@ -82,5 +84,12 @@ def vote(request):
     # Save the updated vote
     vote.save()
 
-    # TODO: Update all sockets
+    # Update all sockets
+    # TODO: Actually send back all data
+    layer = get_channel_layer()
+    async_to_sync(layer.group_send)('update', {
+        'type': 'update.full',
+        'content': 'something'
+    })
+
     return Response()
