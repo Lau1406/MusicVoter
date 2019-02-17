@@ -1,10 +1,8 @@
 from asgiref.sync import async_to_sync
 from django.http import HttpResponse
 from django.template import loader
-from django.contrib.auth.models import User
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from spotipy.oauth2 import SpotifyClientCredentials
